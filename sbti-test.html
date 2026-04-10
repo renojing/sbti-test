@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信广告张伟鹏测试 - SBTI 性格测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .start-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .start-btn:active {
+            transform: translateY(0);
+        }
+
+        .question-number {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 20px;
+            font-size: 18px;
+            color: #333;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .result-card {
+            text-align: center;
+        }
+
+        .result-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .result-name {
+            font-size: 36px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .result-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            font-size: 14px;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .result-description {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.8;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .action-btn.secondary {
+            background: #6c757d;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .action-btn.secondary:hover {
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-top: 25px;
+            padding: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .share-result {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .share-result.show {
+            display: block;
+        }
+
+        .share-result p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .share-result textarea {
+            width: 100%;
+            padding: 15px;
+            font-size: 14px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            resize: none;
+            height: 120px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .result-name {
+                font-size: 28px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 SBTI 性格测试</h1>
+            <p>微信广告张伟鹏测试 · 纯娱乐恶搞版</p>
+        </div>
+
+        <div class="content">
+            <!-- 首页 -->
+            <div id="startPage" class="page active">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="font-size: 60px; margin-bottom: 20px;">🤪</div>
+                    <p style="font-size: 18px; color: #555; line-height: 1.8; margin-bottom: 20px;">
+                        你是吗喽？卷王？还是恋爱脑？<br>
+                        20 道趣味题目，测测你的真实人格！
+                    </p>
+                </div>
+                <button class="start-btn" onclick="startTest()">开始测试</button>
+                <div class="disclaimer">
+                    ⚠️ 本测试纯属娱乐，无科学依据，请勿当真
+                </div>
+            </div>
+
+            <!-- 测试页面 -->
+            <div id="testPage" class="page">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="question-number" id="questionNumber">1 / 20</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer">
+                    <!-- 选项动态生成 -->
+                </div>
+            </div>
+
+            <!-- 结果页面 -->
+            <div id="resultPage" class="page">
+                <div class="result-card">
+                    <div class="result-emoji" id="resultEmoji"></div>
+                    <div class="result-name" id="resultName"></div>
+                    <div class="result-tags" id="resultTags"></div>
+                    <div class="result-description" id="resultDescription"></div>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="shareResult()">📤 分享结果</button>
+                        <button class="action-btn secondary" onclick="restartTest()">🔄 再测一次</button>
+                    </div>
+                    <div class="share-result" id="shareResult">
+                        <p>复制这段文字分享到朋友圈：</p>
+                        <textarea id="shareText" readonly></textarea>
+                    </div>
+                </div>
+                <div class="disclaimer">
+                    ⚠️ 本测试纯属娱乐，无科学依据，请勿当真
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "周末有空，你更倾向？",
+                options: [
+                    { text: "宅家躺平，手机静音，谁也别找我", type: "A" },
+                    { text: "主动约人，出门逛街/聚会，热闹才舒服", type: "B" }
+                ]
+            },
+            {
+                question: "工作中莫名被甩锅，你第一反应？",
+                options: [
+                    { text: "当场反驳，据理力争，必须说清", type: "A" },
+                    { text: "默默忍下，心里骂骂，下次躲远点", type: "B" }
+                ]
+            },
+            {
+                question: "看到未读消息（99+），你会？",
+                options: [
+                    { text: "立刻点开，逐条回复，生怕错过", type: "A" },
+                    { text: "放着不管，等想回了再说，甚至已读不回", type: "B" }
+                ]
+            },
+            {
+                question: "看到超想买但很贵的东西，你会？",
+                options: [
+                    { text: "咬咬牙，直接买，开心最重要", type: "A" },
+                    { text: "反复纠结，算来算去，最后大概率放弃", type: "B" }
+                ]
+            },
+            {
+                question: "明天要交的报告，今晚你会？",
+                options: [
+                    { text: "拖到最后一刻，熬夜赶工", type: "A" },
+                    { text: "提前写完，安心玩耍", type: "B" }
+                ]
+            },
+            {
+                question: "朋友找你疯狂吐槽负能量，你会？",
+                options: [
+                    { text: "耐心听，疯狂安慰，陪他一起骂", type: "A" },
+                    { text: "听两句就烦，想赶紧结束对话", type: "B" }
+                ]
+            },
+            {
+                question: "出门旅行前，你会？",
+                options: [
+                    { text: "做超详细攻略，路线/美食全安排好", type: "A" },
+                    { text: "走到哪算哪，随性出发，主打一个自由", type: "B" }
+                ]
+            },
+            {
+                question: "和人吵完架，你当晚通常会？",
+                options: [
+                    { text: "越想越气，失眠复盘，想着下次怎么怼", type: "A" },
+                    { text: "睡一觉就忘，明天又是新的一天", type: "B" }
+                ]
+            },
+            {
+                question: "发朋友圈的频率？",
+                options: [
+                    { text: "日常分享，一天好几条，生活碎碎念", type: "A" },
+                    { text: "半年可见，甚至半年不发一条", type: "B" }
+                ]
+            },
+            {
+                question: "不熟的人找你帮忙（如砍一刀/借钱），你会？",
+                options: [
+                    { text: "不好意思拒绝，硬着头皮答应", type: "A" },
+                    { text: "直接拒绝，我又不欠你的", type: "B" }
+                ]
+            },
+            {
+                question: "难过委屈时，你会？",
+                options: [
+                    { text: "忍不住哭出来，找人倾诉", type: "A" },
+                    { text: "憋在心里，假装没事，自己消化", type: "B" }
+                ]
+            },
+            {
+                question: "网上爆火的东西（梗/穿搭/美食），你会？",
+                options: [
+                    { text: "立刻跟风，我也要拥有/参与", type: "A" },
+                    { text: "冷眼旁观，跟我没关系，不感兴趣", type: "B" }
+                ]
+            },
+            {
+                question: "在多人聚会中，你通常是？",
+                options: [
+                    { text: "气氛组担当，搞笑玩梗，带动全场", type: "A" },
+                    { text: "安静角落待着，听别人说话，偶尔附和", type: "B" }
+                ]
+            },
+            {
+                question: "发现自己做错事，你会？",
+                options: [
+                    { text: "主动道歉，承认错误，积极补救", type: "A" },
+                    { text: "嘴硬死不承认，找借口，假装没事", type: "B" }
+                ]
+            },
+            {
+                question: "你熬夜通常是因为？",
+                options: [
+                    { text: "刷手机/玩游戏，不知不觉就到半夜", type: "A" },
+                    { text: "工作/学习没完成，被迫熬夜", type: "B" }
+                ]
+            },
+            {
+                question: "听到别人背后说你坏话，你会？",
+                options: [
+                    { text: "非常在意，反复琢磨，影响心情", type: "A" },
+                    { text: "关我屁事，爱说啥说啥，无所谓", type: "B" }
+                ]
+            },
+            {
+                question: "点外卖/买衣服纠结半小时以上？",
+                options: [
+                    { text: "重度选择困难，每次都要纠结很久", type: "A" },
+                    { text: "果断干脆，一眼看中，直接下单", type: "B" }
+                ]
+            },
+            {
+                question: "会不会总下意识讨好别人？",
+                options: [
+                    { text: "是的，总怕别人不喜欢自己", type: "A" },
+                    { text: "不会，爱喜欢不喜欢，我做自己", type: "B" }
+                ]
+            },
+            {
+                question: "日常精神状态更像？",
+                options: [
+                    { text: "间歇性亢奋，持续性摆烂", type: "A" },
+                    { text: "情绪稳定，心态平和，没啥波动", type: "B" }
+                ]
+            },
+            {
+                question: "如果可以不用上班/上学，你会？",
+                options: [
+                    { text: "天天躺平，吃喝睡玩，快乐似神仙", type: "A" },
+                    { text: "给自己找事做，健身/学习/搞副业", type: "B" }
+                ]
+            }
+        ];
+
+        const personalities = [
+            {
+                name: "吗喽 MALOU",
+                emoji: "🐒",
+                tags: ["底层打工人", "佛系摆烂", "平凡且认命"],
+                description: "典型社畜心态，每天只想混口饭吃，没有远大理想，活着就行。不争不抢，不卷不内耗，吗喽的命也是命！"
+            },
+            {
+                name: "死者 DEAD",
+                emoji: "💀",
+                tags: ["灵魂已死", "毫无生气", "无欲无求"],
+                description: "对任何事都提不起兴趣，社交耗尽所有能量，情绪没有任何波动。表面活着，其实已经是一具行尸走肉，别叫醒我。"
+            },
+            {
+                name: "ATM-er 自动送钱机",
+                emoji: "💸",
+                tags: ["人傻钱多", "心软好骗", "总为别人花钱"],
+                description: "不是在花钱，就是在花钱的路上。朋友聚餐你买单，对象购物你付款，耳根子软，别人一求就答应，妥妥的人间ATM。"
+            },
+            {
+                name: "狗屎人 SHIT",
+                emoji: "💩",
+                tags: ["倒霉体质", "诸事不顺", "自我吐槽"],
+                description: "干啥啥不行，倒霉第一名。喝凉水都塞牙，出门必下雨，干啥都失败。主打一个自我贬低，破罐子破摔。"
+            },
+            {
+                name: "卷王 WORKAHOLIC",
+                emoji: "🔥",
+                tags: ["天生奋斗批", "不卷会死", "工作狂"],
+                description: "生命不息，内卷不止。别人躺平你奋斗，别人休息你加班。目标明确，执行力拉满，一心搞钱搞事业，卷死所有人。"
+            },
+            {
+                name: "恋爱脑 LOVEBRAIN",
+                emoji: "💕",
+                tags: ["为爱冲锋", "满眼是爱", "恋爱至上"],
+                description: "人生主线任务是谈恋爱，没爱情活不下去。容易恋爱脑上头，为对象付出一切，智商归零，恋爱大过天。"
+            },
+            {
+                name: "无所谓人 WHATEVER",
+                emoji: "🤷",
+                tags: ["佛系通透", "与世无争", "爱咋咋地"],
+                description: "看破红尘，万事皆空。都行、可以、没关系，是你的口头禅。不纠结、不内耗、不生气，心态稳如老狗。"
+            },
+            {
+                name: "社牛天花板 SOCIAL KING",
+                emoji: "👑",
+                tags: ["社交牛逼症", "人来疯", "气氛组组长"],
+                description: "走到哪都是焦点，跟谁都能聊两句，完全不怕生。社交场合如鱼得水，朋友遍布天下，社恐看了都羡慕。"
+            },
+            {
+                name: "社恐自闭 SOCIAL PHOBIA",
+                emoji: "🙈",
+                tags: ["社交恐惧", "害怕交流", "只想独处"],
+                description: "能打字绝不语音，能线上绝不线下。害怕陌生人，回避社交场合，人多就紧张，独处才是最安全的港湾。"
+            },
+            {
+                name: "嘴强王者 BIG MOUTH",
+                emoji: "🗣️",
+                tags: ["嘴上厉害", "行动矮子", "只会BB"],
+                description: "吵架没输过，做事没赢过。嘴上天天喊着要努力、要减肥、要搞钱，身体却很诚实地躺着不动，纯纯口嗨党。"
+            },
+            {
+                name: "人间清醒 SOBER",
+                emoji: "🧠",
+                tags: ["理智通透", "看人很准", "不被PUA"],
+                description: "逻辑清晰，三观超正，从不被感情冲昏头脑。能轻易看透套路和人心，活得明白，拒绝内耗，人间清醒天花板。"
+            },
+            {
+                name: "快乐小狗 HAPPY DOG",
+                emoji: "🐕",
+                tags: ["没心没肺", "乐观开朗", "永远积极"],
+                description: "天生乐天派，烦恼忘得快。每天都开开心心，像小太阳一样温暖身边人，简单纯粹，容易满足。"
+            },
+            {
+                name: "敏感玻璃心 GLASS HEART",
+                emoji: "💔",
+                tags: ["内心脆弱", "容易多想", "过度在意"],
+                description: "心思细腻又敏感，别人一句话能琢磨半天。很容易受伤、委屈、胡思乱想，需要被小心呵护。"
+            },
+            {
+                name: "腹黑心机男/女 SCHEMER",
+                emoji: "🎭",
+                tags: ["表面温和", "内心算计", "城府深"],
+                description: "看起来人畜无害，其实心里门儿清。做事有城府，懂得隐藏情绪，不轻易表露真心，智商在线，不好惹。"
+            },
+            {
+                name: "摆烂大神 LAZY KING",
+                emoji: "🛌",
+                tags: ["顶级摆烂", "拒绝努力", "怎么舒服怎么来"],
+                description: "努力是不可能努力的，摆烂才是人生真谛。爱谁谁，爱咋咋地，不争不抢不焦虑，主打一个舒服自在。"
+            },
+            {
+                name: "冤种大好人 GOOD GUY",
+                emoji: "😇",
+                tags: ["老好人", "心软", "总吃亏", "不懂拒绝"],
+                description: "一辈子都在为别人着想，有求必应，委屈自己成全别人。经常被当成软柿子捏，典型的冤种性格。"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function startTest() {
+            currentQuestion = 0;
+            answers = [];
+            showPage('testPage');
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `${currentQuestion + 1} / ${questions.length}`;
+            document.getElementById('questionText').textContent = question.question;
+
+            const progressPercent = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = `${progressPercent}%`;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option.text;
+                optionElement.onclick = () => selectOption(option.type);
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+
+        function selectOption(optionType) {
+            answers.push(optionType);
+
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function calculateResult() {
+            const aCount = answers.filter(a => a === 'A').length;
+            const bCount = answers.filter(a => a === 'B').length;
+
+            // 根据A/B比例选择不同的人格
+            let personalityIndex;
+            if (aCount > bCount + 3) {
+                // 偏向A的结果
+                const aPersonalities = [0, 2, 4, 6, 8, 10, 12, 14];
+                personalityIndex = aPersonalities[Math.floor(Math.random() * aPersonalities.length)];
+            } else if (bCount > aCount + 3) {
+                // 偏向B的结果
+                const bPersonalities = [1, 3, 5, 7, 9, 11, 13, 15];
+                personalityIndex = bPersonalities[Math.floor(Math.random() * bPersonalities.length)];
+            } else {
+                // 均衡型
+                personalityIndex = Math.floor(Math.random() * personalities.length);
+            }
+
+            return personalities[personalityIndex];
+        }
+
+        function showResult() {
+            const result = calculateResult();
+
+            document.getElementById('resultEmoji').textContent = result.emoji;
+            document.getElementById('resultName').textContent = result.name;
+
+            const tagsContainer = document.getElementById('resultTags');
+            tagsContainer.innerHTML = '';
+            result.tags.forEach(tag => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'tag';
+                tagElement.textContent = tag;
+                tagsContainer.appendChild(tagElement);
+            });
+
+            document.getElementById('resultDescription').textContent = result.description;
+
+            showPage('resultPage');
+            document.getElementById('progressFill').style.width = '100%';
+        }
+
+        function restartTest() {
+            document.getElementById('shareResult').classList.remove('show');
+            startTest();
+        }
+
+        function shareResult() {
+            const result = calculateResult();
+            const shareText = `🎭 我的SBTI人格测试结果：${result.name} ${result.emoji}\n\n${result.description}\n\n你也来测测吧！👇\nhttps://sbti-test.com`;
+            document.getElementById('shareText').value = shareText;
+            document.getElementById('shareResult').classList.add('show');
+
+            // 自动选中文本
+            const textarea = document.getElementById('shareText');
+            textarea.select();
+            textarea.setSelectionRange(0, textarea.value.length);
+        }
+    </script>
+</body>
+</html>
